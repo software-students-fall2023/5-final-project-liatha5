@@ -5,6 +5,7 @@ import SwipeButtons from './SwipeButtons';
 import Chats from './Chats';
 import ChatScreen from './ChatScreen';
 import Profile from './Profile';
+import Generator from './Generator';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -47,6 +48,15 @@ function App() {
               <>
                 <Header backButton='/'/>
                 <Profile />
+              </>
+            }
+          />
+          <Route
+            path="/generate"
+            element={
+              <>
+                <Header backButton='/'/>
+                <Generator />
               </>
             }
           />

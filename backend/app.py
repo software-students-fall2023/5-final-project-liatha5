@@ -65,7 +65,7 @@ def generate_profile():
     gender_preferences = ["Any", "Male", "Female", "Other"]
 
     name = fake.name()
-    # bio = generate_bio(selected_interest)
+    # #bio = generate_bio(selected_interest)
 
     # # Pass the bio to the image generation function
     image_data = generate_image()
