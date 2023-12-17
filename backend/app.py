@@ -71,15 +71,15 @@ def generate_profile():
     gender_preferences = ["Any", "Male", "Female", "Other"]
 
     name = fake.name()
-    bio = generate_bio(selected_interest)
+    #bio = generate_bio(selected_interest)
 
     # Pass the bio to the image generation function
-    image_url = generate_image(bio)
+    #image_url = generate_image(bio)
 
     return {
         "name": name,
-        "bio": bio,
-        "url": image_url,
+        "bio": "hi",
+        "url": "https://static.tvtropes.org/pmwiki/pub/images/AverageMan1.jpg",
         "preferences": {
             "minAge": random.randint(18, 25),
             "maxAge": random.randint(26, 35),

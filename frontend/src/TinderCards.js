@@ -1,23 +1,38 @@
-import React, { useState } from 'react';
 import TinderCard from 'react-tinder-card';
 import './TinderCards.css';
+import Avatar from '@mui/material/Avatar';
+import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import './Profile.js';
 
 function TinderCards() {
-    const [people, setPeople] = useState([
-        {
-            name: 'Snoopy',
-            url: 'https://wl-brightside.cf.tsp.li/resize/728x/webp/6bf/530/5f80875d918368add675a43eff.jpg.webp'
-        },
-        {
-            name: 'Cold Snoopy',
-            url: 'https://i.pinimg.com/originals/1d/e4/ef/1de4efd3857649e6303c42f54af7edd9.jpg'
-        }
-    ]);
+    const [people, setPeople] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const fetchPromises = [];
+
+            for (let i = 0; i < 10; i++) {
+                const apiURL = 'http://127.0.0.1:5000/generate-profile';
+                fetchPromises.push(fetch(apiURL).then(res => res.json()));
+            }
+
+            try {
+                const resDataArray = await Promise.all(fetchPromises);
+                setPeople(resDataArray);
+                console.log("All requests completed:", resDataArray);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <div>
             <div className='tinderCards_cardContainer'>
-                {people.map((person) => (
+                {people.map((person, index) => (
                     <TinderCard
                         className='swipe'
                         key={person.name}
