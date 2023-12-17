@@ -1,10 +1,14 @@
 import os
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, redirect
 from flask_cors import CORS
 from faker import Faker
 import random
 import openai
 from dotenv import load_dotenv
+from pymongo import MongoClient
+from bson import json_util
+from PIL import Image
+import io
 
 load_dotenv()
 
@@ -15,28 +19,18 @@ fake = Faker()
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-def generate_image(bio):
-    try:
-        client = openai.OpenAI(api_key=openai.api_key)
 
-        prompt = f"A portrait of a person with the following bio: {bio}"
+client = MongoClient("mongodb://0.0.0.0:3001/")
+db = client.tfcdb
+profiles = db.profiles
 
-        # Generate the image
-        response = client.images.generate(
-            model="dall-e-3",
-            prompt=prompt,
-            size="1024x1024",
-            quality="standard",
-            n=1,
-        )
 
-        # Extract the image URL
-        image_url = response.data[0].url
-        return image_url
-
-    except Exception as e:
-        print(f"Exception occurred: {e}")
-        return "Image generation failed"
+def generate_image():
+    im = Image.open("./images/AverageMan1_Large.png")
+    image_bytes = io.BytesIO()
+    im.save(image_bytes,format='PNG')
+    return image_bytes.getvalue()
+    
 
 def generate_bio(interest):
     try:
@@ -71,15 +65,15 @@ def generate_profile():
     gender_preferences = ["Any", "Male", "Female", "Other"]
 
     name = fake.name()
-    #bio = generate_bio(selected_interest)
+    # #bio = generate_bio(selected_interest)
 
-    # Pass the bio to the image generation function
-    #image_url = generate_image(bio)
+    # # Pass the bio to the image generation function
+    image_data = generate_image()
 
-    return {
+    profile = {
         "name": name,
-        "bio": "hi",
-        "url": "https://static.tvtropes.org/pmwiki/pub/images/AverageMan1.jpg",
+        "bio": "hello!",
+        "image_data": image_data,
         "preferences": {
             "minAge": random.randint(18, 25),
             "maxAge": random.randint(26, 35),
@@ -87,12 +81,30 @@ def generate_profile():
             "genderPreference": random.choice(gender_preferences)
         }
     }
+    profiles.insert_one(profile)
+    return profile
 
+@app.route('/generate-ten-profiles',methods=['GET'])
+def generate_ten_profiles():
+    try:
+        for i in range(10):
+            generate_profile()
+        return redirect("/list-profiles")
+    except Exception as e:
+        print(f"Exception occurred in generate_profile: {e}")
+        return redirect("/error")
+    
 
 @app.route('/generate-profile', methods=['GET'])
 def get_generated_profile():
     profile = generate_profile()
-    return jsonify(profile)
+    return json_util.dumps(profile)
 
+
+@app.route('/list-profiles',methods=['GET'])
+def list_profiles():
+    profile_list = list(profiles.find({}))
+    return json_util.dumps(profile_list)
+    
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5000,debug=True)
