@@ -2,7 +2,7 @@ import TinderCard from 'react-tinder-card';
 import './TinderCards.css';
 import Avatar from '@mui/material/Avatar';
 import { Link } from 'react-router-dom';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Profile.js';
 
@@ -15,7 +15,6 @@ function TinderCards() {
                 const res = await axios.get('http://127.0.0.1:5000/list-profiles');
                 setPeople(res.data);
                 console.log(res.data);
-                console.log(`url(data:image/png;base64, ${people[0].image_data})`);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -24,27 +23,26 @@ function TinderCards() {
         fetchData();
     }, []);
 
-    /*
-    useEffect(() => {
-        const fetchData = async () => {
-            const fetchPromises = [];
+    const onSwipe = (direction, person) => {
+        setPeople(prevPeople => prevPeople.filter(p => p.name !== person.name));
+        people.pop();
+        console.log(people);
+        if (people.length == 1) {
+            regenerateProfiles();
+            console.log('regenerated');
+        }
+    };
 
-            for (let i = 0; i < 10; i++) {
-                const apiURL = 'http://127.0.0.1:5000/generate-profile';
-                fetchPromises.push(fetch(apiURL).then(res => res.json()));
-            }
-
-            try {
-                const resDataArray = await Promise.all(fetchPromises);
-                setPeople(resDataArray);
-                console.log("All requests completed:", resDataArray);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        fetchData();
-    }, []);
-    */
+    const regenerateProfiles = async () => {
+        try {
+            await axios.get('http://127.0.0.1:5000/generate-ten-profiles');
+            const res = await axios.get('http://127.0.0.1:5000/list-profiles');
+            setPeople(res.data);
+            console.log('Regenerated profiles:', res.data);
+        } catch (error) {
+            console.error('Error regenerating profiles:', error);
+        }
+    };
 
     if (!people) {
         return <div>Loading matches...</div>
@@ -57,6 +55,7 @@ function TinderCards() {
                     <TinderCard
                         className='swipe'
                         key={person.name}
+                        onSwipe={(direction) => onSwipe(direction, person)}
                         preventSwipe={['up', 'down']}>
                         <div
                             style={{ backgroundImage: `url(data:image/png;base64,${person.image_data.$binary.base64})` }}
