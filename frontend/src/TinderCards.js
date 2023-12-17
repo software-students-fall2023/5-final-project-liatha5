@@ -59,7 +59,7 @@ function TinderCards() {
                         key={person.name}
                         preventSwipe={['up', 'down']}>
                         <div
-                            style={{ backgroundImage: `url(data:image/png;base64,${person.image_data})` }}
+                            style={{ backgroundImage: `url(data:image/png;base64,${person.image_data.$binary.base64})` }}
                             className='card'>
                             <h3>{person.name}</h3>
                         </div>
