@@ -11,6 +11,22 @@ function TinderCards() {
 
     useEffect(() => {
         const fetchData = async () => {
+            try {
+                const res = await axios.get('http://127.0.0.1:5000/list-profiles');
+                setPeople(res.data);
+                console.log(res.data);
+                console.log(`url(data:image/png;base64, ${people[0].image_data})`);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    /*
+    useEffect(() => {
+        const fetchData = async () => {
             const fetchPromises = [];
 
             for (let i = 0; i < 10; i++) {
@@ -28,6 +44,11 @@ function TinderCards() {
         };
         fetchData();
     }, []);
+    */
+
+    if (!people) {
+        return <div>Loading matches...</div>
+    }
 
     return (
         <div>
@@ -38,7 +59,7 @@ function TinderCards() {
                         key={person.name}
                         preventSwipe={['up', 'down']}>
                         <div
-                            style={{ backgroundImage: `url(${person.url})` }}
+                            style={{ backgroundImage: `url(data:image/png;base64,${person.image_data})` }}
                             className='card'>
                             <h3>{person.name}</h3>
                         </div>
