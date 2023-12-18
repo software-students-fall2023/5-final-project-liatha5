@@ -12,7 +12,7 @@ function TinderCards() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`${process.env.API_URL}/list-profiles`);
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}/list-profiles`);
                 setPeople(res.data);
                 console.log(res.data);
                 console.log(`url(data:image/png;base64, ${people[0].image_data})`);
@@ -28,7 +28,7 @@ function TinderCards() {
     if (!people) {
         return <div>Loading matches...</div>
     }
-
+    
     return (
         <div>
             <div className='tinderCards_cardContainer'>

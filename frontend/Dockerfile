@@ -5,6 +5,10 @@ RUN npm ci
 
 COPY . .
 
+COPY .env .
 EXPOSE 3000
+
+RUN npm run build
+
 
 CMD [ "npm", "start" ]
