@@ -5,11 +5,27 @@
     border-bottom: 1px solid #f9f9f9;
 }
 
+.header_logoContainer {
+    display: flex;
+    align-items: center;
+}
+
 .header_logo {
     height: 40px;
     object-fit: contain;
 }
 
 .header_icon{
+    padding: 20px;
+}
+
+.header_title {
+    color: grey;
+    font-weight: bold;
+    margin-left: 10px;
+    font-size: 30px;
+}
+
+.header_icon {
     padding: 20px;
 }

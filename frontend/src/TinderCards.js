@@ -35,8 +35,10 @@ function TinderCards() {
 
     const regenerateProfiles = async () => {
         try {
-            await axios.get('http://127.0.0.1:5000/generate-ten-profiles');
-            const res = await axios.get('http://127.0.0.1:5000/list-profiles');
+            const storedPreferences = JSON.parse(localStorage.getItem('userPreferences'));
+            const queryParams = new URLSearchParams(storedPreferences).toString();
+            await axios.get(`http://127.0.0.1:5000/generate-ten-profiles?${queryParams}`);
+            const res = await axios.get(`http://127.0.0.1:5000/list-profiles?${queryParams}`);
             setPeople(res.data);
             console.log('Regenerated profiles:', res.data);
         } catch (error) {

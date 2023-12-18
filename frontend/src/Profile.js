@@ -44,8 +44,9 @@ function Profile() {
     };
 
     const handleSaveChanges = () => {
+        localStorage.setItem('userPreferences', JSON.stringify(user.preferences));
         console.log('Saved changes:', user);
-    };
+    };   
 
     return (
         <div className='profilePage'>
