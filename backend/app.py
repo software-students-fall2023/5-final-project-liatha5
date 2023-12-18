@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, request, redirect
+from flask import Flask, jsonify, send_from_directory, redirect, request, url_for
 from flask_cors import CORS
 from faker import Faker
 import random
@@ -113,20 +113,32 @@ def get_generated_profile():
 
 @app.route('/list-profiles', methods=['GET'])
 def list_profiles():
+    profile_list = list(profiles.find({}))
+    return json_util.dumps(profile_list)
+
+current_profile = None
+
+@app.route('/create-profile', methods=['POST'])
+def create_profile():
+    global current_profile
     try:
-        # Retrieve query parameters
-        min_age = request.args.get('minAge', default=18, type=int)
-        max_age = request.args.get('maxAge', default=100, type=int)
-        interest = request.args.get('interests', default='', type=str)
-        gender_preference = request.args.get('genderPreference', default='Any', type=str)
+        profile_data = request.get_json()
+        print("Received Profile Data:", profile_data)
+        current_profile = profile_data
+        generate_ten_profiles()
+        return jsonify({"success": "Profile created successfully"})
 
-        generated_profiles = [generate_profile(min_age, max_age, interest, gender_preference) for _ in range(10)]
-
-        return json_util.dumps(generated_profiles)
     except Exception as e:
-        print(f"Exception occurred in list_profiles: {e}")
-        return jsonify({"error": "Internal Server Error"}), 500
-
+        print("Error creating profile:", str(e))
+        return jsonify({"error": "Failed to create profile"}), 500
+    
+@app.route('/get-profile', methods=['GET'])
+def get_profile():
+    global current_profile
+    if current_profile is not None:
+        return jsonify(current_profile)
+    else:
+        return jsonify({'message': 'No profile available'})
     
 if __name__ == '__main__':
     app.run(port=5000,debug=True)
