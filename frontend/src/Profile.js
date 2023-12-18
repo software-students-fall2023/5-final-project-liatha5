@@ -49,7 +49,7 @@ function Profile() {
     const handleSaveChanges = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://127.0.0.1:5000/create-profile', user);
+            await axios.post(`${process.env.REACT_APP_API_URL}/create-profile`, user);
             navigate('/feed');
             console.log('Saved changes:', user);
         } catch (error) {
@@ -59,7 +59,7 @@ function Profile() {
 
     const getProfile = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/get-profile');
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/get-profile`);
             setProfile(response.data);
             setUser(response.data)
         } catch (error) {

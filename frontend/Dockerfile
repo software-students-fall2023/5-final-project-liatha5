@@ -1,9 +1,13 @@
 FROM node:18
 
-COPY package*.json ./
+WORKDIR /usr/src/app
+
+
+COPY package*.json /usr/src/app
 RUN npm ci
 
-COPY . .
+
+COPY . /usr/src/app
 
 ARG REACT_APP_API_URL
 ENV REACT_APP_API_URL $REACT_APP_API_URL
