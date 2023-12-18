@@ -24,16 +24,16 @@ function Profile() {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setUser({ ...user, [name]: value });
+        setUser((user) => ({ ...user, [name]: value }));
     };
 
     const handleFileChange = (event) => {
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
-            setUser({
+            setUser((user) => ({
                 ...user,
                 imageUrl: URL.createObjectURL(img)
-            });
+            }));
         }
     };
 
@@ -43,7 +43,12 @@ function Profile() {
 
     const handlePreferenceChange = (event) => {
         const { name, value } = event.target;
-        setUser({ ...user, preferences: { ...user.preferences, [name]: value } });
+        setUser((user) => ({ 
+            ...user, 
+            preferences: { 
+                ...user.preferences, 
+                [name]: value 
+            } }));
     };
 
     const handleSaveChanges = async (e) => {
@@ -77,8 +82,8 @@ function Profile() {
           name: '',
           imageUrl: '',
           preferences: {
-            minAge: '',
-            maxAge: '',
+            minAge: 0,
+            maxAge: 0,
             interests: '',
             genderPreference: '',
             },
@@ -116,7 +121,7 @@ function Profile() {
                     variant="outlined"
                     name="minAge"
                     type="number"
-                    value={user.preferences.minAge || ''}
+                    value={user.preferences?.minAge}
                     onChange={handlePreferenceChange}
                 />
                 <TextField
@@ -124,14 +129,14 @@ function Profile() {
                     variant="outlined"
                     name="maxAge"
                     type="number"
-                    value={user.preferences.maxAge || ''}
+                    value={user.preferences?.maxAge || ''}
                     onChange={handlePreferenceChange}
                 />
                 <TextField
                     label="Interests"
                     variant="outlined"
                     name="interests"
-                    value={user.preferences.interests || ''}
+                    value={user.preferences?.interests || ''}
                     onChange={handlePreferenceChange}
                 />
                 <TextField
@@ -139,7 +144,7 @@ function Profile() {
                     label="Gender Preference"
                     variant="outlined"
                     name="genderPreference"
-                    value={user.preferences.genderPreference || ''}
+                    value={user.preferences?.genderPreference || ''}
                     onChange={handlePreferenceChange}>
                     {genderOptions.map((option) => (
                         <MenuItem key={option} value={option}>
