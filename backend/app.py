@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, send_from_directory, redirect
+from flask import Flask, jsonify, send_from_directory, redirect, request, url_for
 from flask_cors import CORS
 from faker import Faker
 import random
@@ -59,52 +59,86 @@ def generate_bio(interest):
         print(f"Exception occurred in generate_bio: {e}")
         return "A person with a passion for life."
 
-def generate_profile():
-    interests = ["Reading", "Traveling", "Sports", "Music", "Cooking"]
-    selected_interest = random.choice(interests)
-    gender_preferences = ["Any", "Male", "Female", "Other"]
-
+def generate_profile(min_age, max_age, interest, gender_preference):
+    gender = gender_preference if gender_preference in ["Male", "Female"] else random.choice(["Male", "Female"])
+    bio = generate_bio(interest)
+    
     name = fake.name()
-    # #bio = generate_bio(selected_interest)
-
-    # # Pass the bio to the image generation function
-    image_data = generate_image()
+    
+    if min_age > max_age:
+        min_age, max_age = max_age, min_age
+        
+    age = random.randint(min_age, max_age)
 
     profile = {
         "name": name,
-        "bio": "hello!",
-        "image_data": image_data,
-        "preferences": {
-            "minAge": random.randint(18, 25),
-            "maxAge": random.randint(26, 35),
-            "interests": selected_interest,
-            "genderPreference": random.choice(gender_preferences)
-        }
+        "bio": bio,
+        "age": age,
+        "gender": gender,
+        "image_data": generate_image()
     }
     profiles.insert_one(profile)
     return profile
 
-@app.route('/generate-ten-profiles',methods=['GET'])
+@app.route('/generate-ten-profiles', methods=['GET'])
 def generate_ten_profiles():
     try:
+        # Retrieve query parameters
+        min_age = request.args.get('minAge', default=18, type=int)
+        max_age = request.args.get('maxAge', default=100, type=int)
+        interest = request.args.get('interests', default='', type=str)
+        gender_preference = request.args.get('genderPreference', default='Any', type=str)
+
         for i in range(10):
-            generate_profile()
-        return redirect("/list-profiles")
+            generate_profile(min_age, max_age, interest, gender_preference)
+        
+        return redirect("/list-profiles?minAge=" + str(min_age) + "&maxAge=" + str(max_age) + "&interests=" + interest + "&genderPreference=" + gender_preference)
     except Exception as e:
-        print(f"Exception occurred in generate_profile: {e}")
+        print(f"Exception occurred in generate_ten_profiles: {e}")
         return redirect("/error")
     
 
-@app.route('/generate-profile', methods=['GET'])
+@app.route('/generate-profile', methods=['POST'])
 def get_generated_profile():
-    profile = generate_profile()
+    data = request.json
+    min_age = int(data['minAge'])
+    max_age = int(data['maxAge'])
+    interest = data['interests']
+    gender_preference = data['genderPreference']
+
+    profile = generate_profile(min_age, max_age, interest, gender_preference)
     return json_util.dumps(profile)
 
 
-@app.route('/list-profiles',methods=['GET'])
+
+@app.route('/list-profiles', methods=['GET'])
 def list_profiles():
     profile_list = list(profiles.find({}))
     return json_util.dumps(profile_list)
+
+current_profile = None
+
+@app.route('/create-profile', methods=['POST'])
+def create_profile():
+    global current_profile
+    try:
+        profile_data = request.get_json()
+        print("Received Profile Data:", profile_data)
+        current_profile = profile_data
+        generate_ten_profiles()
+        return jsonify({"success": "Profile created successfully"})
+
+    except Exception as e:
+        print("Error creating profile:", str(e))
+        return jsonify({"error": "Failed to create profile"}), 500
+    
+@app.route('/get-profile', methods=['GET'])
+def get_profile():
+    global current_profile
+    if current_profile is not None:
+        return jsonify(current_profile)
+    else:
+        return jsonify({'message': 'No profile available'})
     
 if __name__ == '__main__':
     app.run(port=5000,debug=True)

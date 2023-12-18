@@ -32,7 +32,7 @@ function Generator() {
                 <Avatar
                     className='profileAvatar'
                     alt={user.name}
-                    src={`data:image/png;base64,${user.image_data.binary}`}
+                    src={`data:image/png;base64,${user.image_data.$binary.base64}`}
                     sx={{ width: 100, height: 100 }}
                 />
                 <h3 label="Name" variant="outlined" name="name">

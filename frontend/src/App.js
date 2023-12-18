@@ -15,7 +15,7 @@ function App() {
       <Router>
         <Routes>
           <Route 
-            path="/" 
+            path="/feed" 
             element={
               <>
                 <Header/>
@@ -43,10 +43,9 @@ function App() {
             }
           />
           <Route 
-            path="/profile" 
+            path="/" 
             element={
               <>
-                <Header backButton='/'/>
                 <Profile />
               </>
             }

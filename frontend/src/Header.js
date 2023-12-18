@@ -15,15 +15,16 @@ function Header({ backButton }) {
                     <ArrowBackIosIcon fontSize='large' className='header_icon'/>
                 </IconButton>
             ): (
-                <IconButton onClick={() => navigate('/profile')}>
+                <IconButton onClick={() => navigate('/')}>
                     <PersonIcon className='header_icon' fontSize='large'/>
                 </IconButton>
             )}
 
-            <Link to='/'>
-            <img className='header_logo'
-                src='https://download.logo.wine/logo/Tinder_(app)/Tinder_(app)-Flame-Logo.wine.png'
-                alt='Tinder Logo'/>
+            <Link to='/' className='header_logoContainer'>
+                <img className='header_logo'
+                    src='https://download.logo.wine/logo/Tinder_(app)/Tinder_(app)-Flame-Logo.wine.png'
+                    alt='Tinder Logo'/>
+                <p className='header_title'>Tinder for Cousins</p>
             </Link>
             <Link to='/chat'>
                 <IconButton>
