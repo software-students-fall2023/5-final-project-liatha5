@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, send_from_directory, redirect
+from flask import Flask, jsonify, send_from_directory, redirect, request, url_for
 from flask_cors import CORS
 from faker import Faker
 import random
@@ -20,7 +20,7 @@ fake = Faker()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
-client = MongoClient("mongodb://0.0.0.0:3001/")
+client = MongoClient("mongodb://127.0.0.1:27017")
 db = client.tfcdb
 profiles = db.profiles
 
@@ -105,6 +105,30 @@ def get_generated_profile():
 def list_profiles():
     profile_list = list(profiles.find({}))
     return json_util.dumps(profile_list)
+
+current_profile = None
+
+@app.route('/create-profile', methods=['POST'])
+def create_profile():
+    global current_profile
+    try:
+        profile_data = request.get_json()
+        print("Received Profile Data:", profile_data)
+        current_profile = profile_data
+        generate_ten_profiles()
+        return jsonify({"success": "Profile created successfully"})
+
+    except Exception as e:
+        print("Error creating profile:", str(e))
+        return jsonify({"error": "Failed to create profile"}), 500
+    
+@app.route('/get-profile', methods=['GET'])
+def get_profile():
+    global current_profile
+    if current_profile is not None:
+        return jsonify(current_profile)
+    else:
+        return jsonify({'message': 'No profile available'})
     
 if __name__ == '__main__':
     app.run(port=5000,debug=True)

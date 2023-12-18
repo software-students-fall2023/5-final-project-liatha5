@@ -15,7 +15,7 @@ function Header({ backButton }) {
                     <ArrowBackIosIcon fontSize='large' className='header_icon'/>
                 </IconButton>
             ): (
-                <IconButton onClick={() => navigate('/profile')}>
+                <IconButton onClick={() => navigate('/')}>
                     <PersonIcon className='header_icon' fontSize='large'/>
                 </IconButton>
             )}
