@@ -16,6 +16,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 fake = Faker()
+current_profile = None
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -25,8 +26,8 @@ db = client.tfcdb
 profiles = db.profiles
 
 
-def generate_image():
-    im = Image.open("./images/AverageMan1_Large.png")
+def generate_image(filePath):
+    im = Image.open(filePath)
     image_bytes = io.BytesIO()
     im.save(image_bytes,format='PNG')
     return image_bytes.getvalue()
@@ -60,23 +61,35 @@ def generate_bio(interest):
         return "A person with a passion for life."
 
 def generate_profile(min_age, max_age, interest, gender_preference):
-    gender = gender_preference if gender_preference in ["Male", "Female"] else random.choice(["Male", "Female"])
-    bio = generate_bio(interest)
+    if random.random() < 0.2:
+        # Filbert's profile
+        profile = {
+            "name": "Filbert",
+            "bio": "i want you",
+            "age": 100,
+            "gender": "male",
+            "image_data": generate_image("./images/filbert.png")
+        }
+    else:
+        # Generate a random profile
+        gender = gender_preference if gender_preference in ["Male", "Female"] else random.choice(["Male", "Female"])
+        bio = generate_bio(interest)
     
-    name = fake.name()
+        name = fake.name()
     
-    if min_age > max_age:
-        min_age, max_age = max_age, min_age
+        if min_age > max_age:
+            min_age, max_age = max_age, min_age
         
-    age = random.randint(min_age, max_age)
+        age = random.randint(min_age, max_age)
 
-    profile = {
-        "name": name,
-        "bio": bio,
-        "age": age,
-        "gender": gender,
-        "image_data": generate_image()
-    }
+        profile = {
+            "name": name,
+            "bio": bio,
+            "age": age,
+            "gender": gender,
+            "image_data": generate_image("./images/freak.png")
+        }
+    
     profiles.insert_one(profile)
     return profile
 
@@ -113,10 +126,9 @@ def get_generated_profile():
 
 @app.route('/list-profiles', methods=['GET'])
 def list_profiles():
-    profile_list = list(profiles.find({}))
+    profile_list = list(profiles.find({}).limit(10))
     return json_util.dumps(profile_list)
 
-current_profile = None
 
 @app.route('/create-profile', methods=['POST'])
 def create_profile():
@@ -125,9 +137,13 @@ def create_profile():
         profile_data = request.get_json()
         print("Received Profile Data:", profile_data)
         current_profile = profile_data
-        generate_ten_profiles()
+        for i in range(10):
+            min_age = int(current_profile.get("preferences", {}).get("minAge", 18))
+            max_age = int(current_profile.get("preferences", {}).get("maxAge", 100))
+            interest = current_profile.get("preferences", {}).get("interests", "")
+            gender_preference = current_profile.get("preferences", {}).get("genderPreference", "Any")
+            generate_profile(min_age, max_age, interest, gender_preference)
         return jsonify({"success": "Profile created successfully"})
-
     except Exception as e:
         print("Error creating profile:", str(e))
         return jsonify({"error": "Failed to create profile"}), 500
