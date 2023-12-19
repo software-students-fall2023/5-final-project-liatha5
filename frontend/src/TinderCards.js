@@ -12,7 +12,7 @@ function TinderCards() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get('http://127.0.0.1:5000/list-profiles');
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}/list-profiles`);
                 setPeople(res.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -35,8 +35,8 @@ function TinderCards() {
         try {
             const storedPreferences = JSON.parse(localStorage.getItem('userPreferences'));
             const queryParams = new URLSearchParams(storedPreferences).toString();
-            await axios.get(`http://127.0.0.1:5000/generate-ten-profiles?${queryParams}`);
-            const res = await axios.get(`http://127.0.0.1:5000/list-profiles?${queryParams}`);
+            await axios.get(`${process.env.REACT_APP_API_URL}/generate-ten-profiles?${queryParams}`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/list-profiles?${queryParams}`);
             setPeople(res.data);
             console.log('Regenerated profiles:', res.data);
         } catch (error) {
@@ -44,10 +44,11 @@ function TinderCards() {
         }
     };
 
+
     if (!people) {
         return <div>Loading matches...</div>
     }
-
+    
     return (
         <div>
             <div className='tinderCards_cardContainer'>

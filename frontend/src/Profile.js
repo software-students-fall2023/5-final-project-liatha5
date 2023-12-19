@@ -23,16 +23,16 @@ function Profile() {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setUser({ ...user, [name]: value });
+        setUser((user) => ({ ...user, [name]: value }));
     };
 
     const handleFileChange = (event) => {
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
-            setUser({
+            setUser((user) => ({
                 ...user,
                 imageUrl: URL.createObjectURL(img)
-            });
+            }));
         }
     };
 
@@ -42,7 +42,12 @@ function Profile() {
 
     const handlePreferenceChange = (event) => {
         const { name, value } = event.target;
-        setUser({ ...user, preferences: { ...user.preferences, [name]: value } });
+        setUser((user) => ({ 
+            ...user, 
+            preferences: { 
+                ...user.preferences, 
+                [name]: value 
+            } }));
     };
 
     const handleSaveChanges = async (e) => {

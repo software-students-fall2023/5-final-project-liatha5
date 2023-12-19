@@ -21,7 +21,7 @@ current_profile = None
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 
-client = MongoClient("mongodb://127.0.0.1:27017")
+client = MongoClient(os.getenv('MONGO_DB_STRING'))
 db = client.tfcdb
 profiles = db.profiles
 

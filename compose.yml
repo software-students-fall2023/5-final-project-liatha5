@@ -6,11 +6,22 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment: 
+      - API_URL=${API_URL}
     command: npm start
+    depends_on:
+      - backend
   backend:
      build:
       context: ./backend
       dockerfile: Dockerfile
      ports:
       - "5000:5000"
-  
+     environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MONGO_DB_STRING=${MONGO_DB_STRING} 
+     depends_on:
+      - mongodb
+  mongodb:
+      image: mongodb/mongodb-community-server:6.0-ubi8
+
