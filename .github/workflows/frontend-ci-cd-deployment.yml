@@ -30,7 +30,7 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           build-args: |
-            REACT_APP_API_URL=146.190.165.6:5000
+            REACT_APP_API_URL=http://146.190.165.6:5000
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
