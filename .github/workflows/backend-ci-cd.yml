@@ -19,12 +19,12 @@ jobs:
         python-version: "3.9"
     - name: Install dependencies
       run: |
+        cd backend
         python -m pip install --upgrade pip
         pip install pytest pytest-flask pymongo flask-cors
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       run: |
-       cd backend
        PYTHONPATH=./ pytest tests/test_app.py
 
   push_to_registry:
