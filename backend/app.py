@@ -91,8 +91,8 @@ def generate_ten_profiles():
 
         for i in range(10):
             generate_profile(min_age, max_age, interest, gender_preference)
-        
-        return redirect("/list-profiles?minAge=" + str(min_age) + "&maxAge=" + str(max_age) + "&interests=" + interest + "&genderPreference=" + gender_preference)
+        profile_list = list(profiles.find({}))
+        return json_util.dumps(profile_list)
     except Exception as e:
         print(f"Exception occurred in generate_ten_profiles: {e}")
         return redirect("/error")
