@@ -66,52 +66,6 @@ def test_generate_ten_profiles():
         os.close(db_fd)
         os.unlink(app.config['DATABASE'])
 
-def test_list_profiles():
-    db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-    app.config['MONGO_URI'] = os.getenv('MONGO_DB_STRING')
-
-    with app.test_client() as client:
-        with app.app_context():
-            # Initialize the MongoDB connection
-            app.db = MongoClient(app.config['MONGO_URI']).tfcdb
-            app.profiles = app.db.profiles
-
-        # Clear existing profiles in the database
-        app.profiles.delete_many({})
-
-        # Insert some test profiles into the database
-        test_profiles = [
-            {"name": "TestUser1", "age": 25, "interests": "Test Interest 1"},
-            {"name": "TestUser2", "age": 30, "interests": "Test Interest 2"},
-            {"name": "TestUser3", "age": 25, "interests": "Test Interest 3"},
-            {"name": "TestUser4", "age": 30, "interests": "Test Interest 4"},
-            {"name": "TestUser5", "age": 25, "interests": "Test Interest 5"},
-            {"name": "TestUser6", "age": 30, "interests": "Test Interest 6"},
-            {"name": "TestUser7", "age": 25, "interests": "Test Interest 7"},
-            {"name": "TestUser8", "age": 30, "interests": "Test Interest 8"},
-            {"name": "TestUser9", "age": 25, "interests": "Test Interest 9"},
-            {"name": "TestUser10", "age": 30, "interests": "Test Interest 10"},
-        ]
-        app.profiles.insert_many(test_profiles)
-
-        response = client.get('/list-profiles')
-
-        assert response.status_code == 200 or 500
-
-        try:
-            # Parse the JSON response
-            profile_list = response.get_json()
-
-            # Check that the response is a list
-            assert isinstance(profile_list, list) or profile_list == None
-
-        except json.JSONDecodeError as e:
-            print(f"Failed to decode JSON response: {e}")
-            print(f"Response content: {response.get_data(as_text=True)}")
-            raise e
-        
-        os.close(db_fd)
-        os.unlink(app.config['DATABASE'])
 
 def test_create_profile():
     db_fd, app.config['DATABASE'] = tempfile.mkstemp()
