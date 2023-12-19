@@ -2,14 +2,14 @@ version: '3.8'
 name: tinder-for-cousins
 services:
   frontend:
-    image: hdude4321/tinder-for-cousins-front-end:main
+    image: hdude4321/tinder-for-cousins-front-end:latest
     ports:
       - "3000:3000"
     command: npm start
     depends_on:
       - backend
   backend:
-     image: hdude4321/tinder-for-cousins-back-end:main
+     image: hdude4321/tinder-for-cousins-back-end:latest
      ports:
       - "5000:5000"
      env_file:

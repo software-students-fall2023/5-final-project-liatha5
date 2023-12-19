@@ -14,10 +14,18 @@ Do you live in Alabama? Well then this is the app for you! JK. [Tinder for Cousi
 ## Configuration Instructions
 To run the project:
 
+### Dev Environment
 * Clone the repository
 * Run ```npm start``` in the frontend directory
 * Run ```flask run``` in the backend directory
 * Access the app from http://localhost:3000
+
+### Using Docker compose
+* Create a ```.env-backend``` file with REACT_APP_API_URL and OPENAI_API_KEY values(provided in discord)
+* Run docker compose up 
+
+### Live Hosting
+* Site is hosted at [http://146.190.165.6:3000/](http://146.190.165.6:3000/)
 
 To run Flask tests:
 
