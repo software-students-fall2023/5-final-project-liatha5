@@ -21,7 +21,9 @@ jobs:
     steps:
       - name: Checkout the repo 
         uses: actions/checkout@v4
-        
+      
+      - name: Enter frontend directory
+        run: cd frontend
       - name: Build container image
         run: docker build --build-arg="REACT_APP_API_URL=http://146.190.165.6:5000" -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
