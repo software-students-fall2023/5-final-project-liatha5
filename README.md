@@ -1,4 +1,7 @@
 # Final Project
+![Backend](https://github.com/software-students-fall2023/5-final-project-liatha5/actions/workflows/backend-ci-cd.yml/badge.svg)
+
+![Frontend](https://github.com/software-students-fall2023/5-final-project-liatha5/actions/workflows/frontend-ci-cd-deployment.yml/badge.svg)
 
 ## Project Description
 a plain-language description of your project, including:
