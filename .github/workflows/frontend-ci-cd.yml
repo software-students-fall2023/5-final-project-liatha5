@@ -3,12 +3,9 @@ name: frontend CI/CD
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'frontend/**'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'frontend/**'
+
 
 jobs:
   push_to_registry:
@@ -35,7 +32,7 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           build-args: |
-            REACT_APP_API_URL=${{secrets.REACT_APP_API_URL}}
+            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
