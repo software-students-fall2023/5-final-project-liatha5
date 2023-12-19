@@ -13,7 +13,7 @@ on:
         required: true
 env:
     REGISTRY: "registry.digitalocean.com/liatha5"
-    IMAGE_NAME: "hdude4321/tinder-for-cousins-front-end"
+    IMAGE_NAME: "tinder-for-cousins-front-end"
 
 jobs:
   build_and_push:
@@ -22,10 +22,9 @@ jobs:
       - name: Checkout the repo 
         uses: actions/checkout@v4
       
-      - name: Enter frontend directory
-        run: cd frontend
+
       - name: Build container image
-        run: docker build --build-arg="REACT_APP_API_URL=http://146.190.165.6:5000" -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: cd ./frontend && docker build --build-arg="REACT_APP_API_URL=http://146.190.165.6:5000" -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
