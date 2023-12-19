@@ -3,13 +3,9 @@ name: backend CI/CD
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
-
+  
 jobs:
   push_to_registry:
     name: Push Docker Image to Docker Hub

@@ -14,15 +14,13 @@ function TinderCards() {
             try {
                 const res = await axios.get(`${process.env.REACT_APP_API_URL}/list-profiles`);
                 setPeople(res.data);
-                console.log(res.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchData();
     }, []);
-
+    
     const onSwipe = (direction, person) => {
         setPeople(prevPeople => prevPeople.filter(p => p.name !== person.name));
         people.pop();
@@ -54,19 +52,21 @@ function TinderCards() {
     return (
         <div>
             <div className='tinderCards_cardContainer'>
-                {people.map((person, index) => (
-                    <TinderCard
-                        className='swipe'
-                        key={person.name}
-                        onSwipe={(direction) => onSwipe(direction, person)}
-                        preventSwipe={['up', 'down']}>
-                        <div
-                            style={{ backgroundImage: `url(data:image/png;base64,${person.image_data.$binary.base64})` }}
-                            className='card'>
-                            <h3>{person.name}</h3>
-                        </div>
-                    </TinderCard>
-                ))}
+            {people.map((person, index) => (
+                <TinderCard
+                    className='swipe'
+                    key={person.name}
+                    onSwipe={(direction) => onSwipe(direction, person)}
+                    preventSwipe={['up', 'down']}>
+                    <div
+                        style={{ backgroundImage: `url(data:image/png;base64,${person.image_data.$binary.base64})` }}
+                        className='card'>
+                        <h2 className="card-name">{person.name}</h2>
+                        <h4 className="card-age">{person.age}</h4>
+                        <p className="card-bio">{person.bio}</p>
+                    </div>
+                </TinderCard>
+            ))}
             </div>
         </div>
     );

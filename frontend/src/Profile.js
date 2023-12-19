@@ -7,7 +7,6 @@ import './Profile.css';
 import axios from 'axios';
 
 function Profile() {
-    const [profile, setProfile] = useState({});
     const [user, setUser] = useState({
         name: '',
         imageUrl: '',
@@ -54,7 +53,7 @@ function Profile() {
     const handleSaveChanges = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://127.0.0.1:5000/create-profile', user);
+            await axios.post(`${process.env.REACT_APP_API_URL}/create-profile`, user);
             navigate('/feed');
             console.log('Saved changes:', user);
         } catch (error) {
@@ -65,33 +64,24 @@ function Profile() {
     const getProfile = async () => {
         try {
             const response = await axios.get('http://127.0.0.1:5000/get-profile');
-            setProfile(response.data);
-            setUser(response.data)
+            // Update the user state only if the response has data and preferences
+            if (response.data && response.data.preferences) {
+                setUser(response.data);
+            } else {
+                console.error('Profile data is incomplete:', response.data);
+            }
         } catch (error) {
             console.error('Error getting profile:', error);
         }
-    }
+    };
 
     useEffect(() => {
         getProfile();
     }, []);
 
-    const clearFormData = () => {
-        // Clear the formData state
-        setUser({
-          name: '',
-          imageUrl: '',
-          preferences: {
-            minAge: 0,
-            maxAge: 0,
-            interests: '',
-            genderPreference: '',
-            },
-        });
-    };
-
     return (
         <div className='profilePage'>
+            {/* Profile Section */}
             <div className='profileSection'>
                 <input
                     ref={fileInputRef}
@@ -114,6 +104,8 @@ function Profile() {
                     onChange={handleInputChange}
                 />
             </div>
+
+            {/* Preferences Section */}
             <div className='preferencesSection'>
                 <h3>Ideal Partner Preferences</h3>
                 <TextField
@@ -121,7 +113,7 @@ function Profile() {
                     variant="outlined"
                     name="minAge"
                     type="number"
-                    value={user.preferences?.minAge}
+                    value={user.preferences?.minAge || ''}
                     onChange={handlePreferenceChange}
                 />
                 <TextField

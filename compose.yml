@@ -1,27 +1,20 @@
 version: '3.8'
+name: tinder-for-cousins
 services:
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: hdude4321/tinder-for-cousins-front-end:latest
     ports:
       - "3000:3000"
-    environment: 
-      - API_URL=${API_URL}
     command: npm start
     depends_on:
       - backend
   backend:
-     build:
-      context: ./backend
-      dockerfile: Dockerfile
+     image: hdude4321/tinder-for-cousins-back-end:latest
      ports:
       - "5000:5000"
-     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - MONGO_DB_STRING=${MONGO_DB_STRING} 
+     env_file:
+      - .env-backend
      depends_on:
       - mongodb
   mongodb:
       image: mongodb/mongodb-community-server:6.0-ubi8
-
