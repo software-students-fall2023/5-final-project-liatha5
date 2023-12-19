@@ -3,13 +3,9 @@ name: backend CI/CD
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'backend/**'
-
+  
 jobs:
   push_to_registry:
     name: Push Docker Image to Docker Hub
@@ -33,6 +29,7 @@ jobs:
         with:
           context: ./backend
           file: ./backend/Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
