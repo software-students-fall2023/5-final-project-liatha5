@@ -5,7 +5,6 @@ on:
   push:
     branches: [ "main" ]
 
-
 jobs:
   push_to_registry:
     name: Push Docker Image to Docker Hub
@@ -31,7 +30,7 @@ jobs:
           file: ./frontend/Dockerfile
           push: true
           build-args: |
-            REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
+            REACT_APP_API_URL=146.190.165.6:5000
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
