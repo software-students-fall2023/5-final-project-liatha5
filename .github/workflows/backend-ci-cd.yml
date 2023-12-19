@@ -3,6 +3,8 @@ name: backend CI/CD
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   
 jobs:
   push_to_registry:
