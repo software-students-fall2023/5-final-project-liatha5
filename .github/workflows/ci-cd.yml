@@ -23,6 +23,8 @@ jobs:
         context: ./frontend
         file: ./frontend/Dockerfile
         push: true
+        build-args: |
+            REACT_APP_API_URL=http://146.190.165.6:5000
         tags: hdude4321/tinder-for-cousins-front-end:main
 
     - name: Build backend
@@ -45,7 +47,7 @@ jobs:
           key:  ${{ secrets.PASSWORD }}
           script: |
             cd /tinderForCousins
-            docker-compose down
-            docker-compose pull
-            docker-compose up -d 
-            docker image prune -a -f
+            docker compose down
+            docker compose pull
+            docker compose up -d
+            docker image prune -f
