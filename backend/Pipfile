@@ -18,6 +18,7 @@ flask-cors = "*"
 faker = "*"
 openai = "*"
 pillow = "*"
+pytest = "*"
 
 [dev-packages]
 
