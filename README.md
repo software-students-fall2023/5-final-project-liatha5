@@ -1,8 +1,8 @@
 # Final Project
 
 ## Project Description
-a plain-language description of your project, including:
-- badges at the top of the README.md file showing the result of the latest CI/CD of each subsystem.
+Do you live in Alabama? Well then this is the app for you! JK. Tinder for Cousins is a dating simulator game that gives you AI generated profiles tailored to your interests!
+
 - links to the container images for each custom subsystem, hosted on DockerHub.
 
 ## Project Members
@@ -11,5 +11,10 @@ a plain-language description of your project, including:
 - [Lianna Poblete](https://github.com/liannnaa)
 
 ## Configuration Instructions
-- instructions for how to configure and run all parts of your project for any developer on any platform - these instructions must work!
-- instructions for how to set up any environment variables and import any starter data into the database, as necessary, for the system to operate correctly when run.
+
+To run the project:
+
+* Clone the repository
+* Run ```npm start``` in the frontend directory
+* Run ```flask run``` in the backend directory
+* Access the app from http://localhost:3000

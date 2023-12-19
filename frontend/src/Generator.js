@@ -11,7 +11,7 @@ function Generator() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`${process.env.API_URL}/generate-profile`);
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}/generate-profile`);
                 setUser(res.data);
                 console.log(res.data);
             } catch (error) {
