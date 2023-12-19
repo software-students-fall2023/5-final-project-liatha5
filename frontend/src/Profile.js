@@ -63,7 +63,7 @@ function Profile() {
 
     const getProfile = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/get-profile');
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/get-profile`);
             // Update the user state only if the response has data and preferences
             if (response.data && response.data.preferences) {
                 setUser(response.data);
